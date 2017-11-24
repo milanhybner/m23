@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>Seznam akcí</title>
+    </head>
+    <meta charset=utf-8>
+    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"/>
+    <body>
+
+<div id="app" class="mw6 center">
+            <h1>Seznam</h1>
+  <article v-for="item in items">
+    <a class="link dt w-100 bb b--black-10 pb2 mt2 dim blue" href="#0">
+      <div class="dtc w3">
+         <img :src="item['fields']['Obrazek'][0]['thumbnails']['large']['url']" alt="" v-if="item['fields']['Obrazek']" class="db w-100">
+      </div>
+      <div class="dtc v-top pl2">
+        <h1 class="f6 f5-ns fw6 lh-title black mv0">{{ item['fields']['Akce'] }}</h1>
+        <h2 class="f6 fw4 mt2 mb0 black-60">{{ item['fields']['Popis'] }}</h2>
+        <dl class="mt2 f6">
+          <dt class="clip">Cena</dt>
+          <dd class="ml0">350 Kč</dd>
+        </dl>
+      </div>
+    </a>
+  </article>
+        </div><!--app-->
+        
+
+        <!-- Include Dependancy Scripts -->
+        <script type="text/javascript" src="https://unpkg.com/vue"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
+
+<script type="text/javascript">
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    items: []
+                },
+                mounted: function(){
+                   this.loadItems(); 
+                },
+                methods: {
+                    loadItems: function(){
+                        
+                        // Init variables
+                        var self = this
+                        var app_id = "appZB8ijzGUuuwJHP";
+                        var app_key = "keyXQwawb2RfnxQSR";
+                        this.items = []
+
+axios.get(
+                            "https://api.airtable.com/v0/"+app_id+"/Udaje?view=2018%20akce%20pracovni",
+                            { 
+                                headers: { Authorization: "Bearer "+app_key } 
+                            }
+                        ).then(function(response){
+                            self.items = response.data.records
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
+
