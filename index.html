@@ -1,1 +1,61 @@
-You are here!
+<html>
+<head>
+<script src="https://codepen.io/chriscoyier/pen/yIgqi.js"></script>
+<script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js"></script>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
+<script type="text/javascript">
+var App = React.createClass({
+  
+  getInitialState: function() {
+    return {
+      jobs: []
+    }
+  },
+  
+  componentDidMount: function() {
+    axios.defaults.headers.common['Authorization'] = 'Bearer keyXQwawb2RfnxQSR';
+    var th = this;
+    this.serverRequest = 
+      axios.get(this.props.source)
+        .then(function(result) {    
+          th.setState({
+            jobs: result.data.akce
+          });
+        })
+  },
+  
+  componentWillUnmount: function() {
+    this.serverRequest.abort();
+  },
+  
+  render: function() {
+    return (
+      <div>
+        <h1>Jobs!</h1>
+        {this.state.jobs.map(function(job) {
+          return (
+            <div key={job.url} className="job">
+              <a href={job.url}>
+                {job.company_name}
+                is looking for a 
+                {job.term}
+                {job.title}
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    )
+  }
+});
+
+React.render(<App source="https://codepen.io/jobs.json" />, document.querySelector("#root"));
+</script>
+</body>
+</html>
